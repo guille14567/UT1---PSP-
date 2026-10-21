@@ -18,17 +18,23 @@ void main() {
 
         int suma = 0;
         int numerosRecibidos;
+         char entrada[10];
+    
 
-        while (read(fd[0],&numerosRecibidos, sizeof(numerosRecibidos)))
+        while (read(fd[0],&entrada, sizeof(entrada)))
         {
-
-            printf("Numero a sumar:  %d\n", numerosRecibidos);
-            suma = suma + numerosRecibidos;
+            if (strcmp(entrada, "+") != 0 ) {
+                    numerosRecibidos = atoi(entrada);
+                    suma = suma + numerosRecibidos;
+            }else{
+                printf("Caracter recibido : %s \n", entrada);
+            }
+            
 
         }
        
         printf("La suma total es igual a: %d \n" , suma);
-
+        
         close(fd[0]);
         printf("HIJO ha terminado \n");
 
@@ -36,27 +42,24 @@ void main() {
     else {
         // PADRE: solo escribe
         close(fd[0]);
-
-        int numerosLeidos;
         char entrada[10];
-   
-        do
-        {   
-          printf("Dame un número (Dame --> +,-,/,* -- Indicará el signo y terminará de recibir número): ");
+    
+        do{   
+          printf("Dame un número (Indica el signo para la finalizacizacición ): ");
           scanf("%s", entrada);
 
-                if (strcmp(entrada, "+") != 0 ) {
-                    numerosLeidos = atoi(entrada);
-                    write(fd[1], &numerosLeidos, sizeof(numerosLeidos));
-                }   
+                    write(fd[1], &entrada, sizeof(entrada));
+                
 
+        
         } while (strcmp(entrada, "+") != 0);
-       
-        
-        
+
+
         
        
         close(fd[1]); 
+
+        
         wait(NULL);
         printf("PADRE ha terminado \n");
 
